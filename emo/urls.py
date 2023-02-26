@@ -16,12 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-import emo_app
-from emo_app import views
 from emo_app import suburls
+from emo_app.views import chatroom, register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
+    path('', register),
+    path('chatroom/', chatroom.as_view(), name='chat_room'),
     path('test/', include(suburls,namespace='test')),
 ]
