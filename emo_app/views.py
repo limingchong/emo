@@ -50,7 +50,6 @@ class chatroom(ListView):
                 response_json = json.loads(response.text)
                 origin_sentence = sentence
                 sentence = response_json["responseData"]["translatedText"]
-                print(sentence)
 
             vs = analyzer.polarity_scores(sentence)
 
@@ -65,7 +64,7 @@ class chatroom(ListView):
                 'pos': vs['pos'],
                 'neg': vs['neg'],
                 'neu': vs['neu'],
-                'com': vs['compound']
+                'com': round(vs['compound'], 2)
             }
             Sentence.objects.create(**data)
         return HttpResponseRedirect("/")
