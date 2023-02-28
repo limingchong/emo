@@ -1,73 +1,127 @@
+import json
 from datetime import datetime, timedelta
+from time import sleep
 
 import requests
-from django.shortcuts import render
+from apscheduler.schedulers.background import BackgroundScheduler
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template.response import TemplateResponse
+from django.shortcuts import render
+from django.views.generic import ListView
+from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from django.views.generic import View, ListView, CreateView, DetailView, UpdateView, DeleteView
-from django.urls import reverse, reverse_lazy
-from emo_app.models import User, Sentence
 from emo_app.forms import UserInfo
-import json
-
+from emo_app.models import User, Sentence, Room
+import quicktranslate
 
 # Create your views here.
 
 
+
+last_sentence = 0
+try:
+    scheduler = BackgroundScheduler()
+    scheduler.add_jobstore(DjangoJobStore(), "default")
+    x = last_sentence
+
+    @register_job(scheduler, "interval", seconds=1, id="updater")
+    def update():
+        if x != Sentence.objects.last().id:
+            last_sentence = Sentence.objects.last().id
+            return HttpResponseRedirect("/")
+
+    register_events(scheduler)
+    scheduler.start()
+except Exception as e:
+    print('scheduler error：%s' % str(e))
+
+def say(request):
+    sleep(0.3)
+    def check_contain_chinese(check_str):
+        for ch in check_str.encode('utf-8').decode('utf-8'):
+            if u'\u4e00' <= ch <= u'\u9fff':
+                return True
+        return False
+
+    if request.POST['sentence'] != '':
+        sentence = request.POST['sentence']
+        analyzer = SentimentIntensityAnalyzer()
+
+        origin_sentence = ""
+        translation = ""
+        if check_contain_chinese(sentence):
+            translation = quicktranslate.get_translate_youdao(sentence)
+            origin_sentence = sentence
+        else:
+            translation = sentence
+            origin_sentence = sentence
+
+        vs = analyzer.polarity_scores(translation)
+
+        roomname = request.COOKIES['roomname']
+
+        data = {
+            'username': request.COOKIES['username'],
+            'sentence': origin_sentence,
+            'time': datetime.now(),
+            'color': ('{:02X}' * 3).format(int(255 * vs['pos']), int(255 * vs['neg']), 0),
+            'pos': vs['pos'],
+            'neg': vs['neg'],
+            'neu': vs['neu'],
+            'com': round(vs['compound']/2, 1)*10,
+            'roomname': roomname
+        }
+        Sentence.objects.create(**data)
+
+        total_com = 0
+        count = 0
+        for s in Sentence.objects.filter(roomname=roomname):
+            if check_contain_chinese(s.sentence):
+                total_com += round(analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound'] / 2, 1) * 10
+            else:
+                total_com += round(analyzer.polarity_scores(s.sentence)['compound']/2, 1)*10
+            count += 1
+
+        Room.objects.filter(roomname=roomname).update(com=round(total_com/count, 0))
+
+    return HttpResponseRedirect("/")
+
+class roomlist(ListView):
+    model = Room
+    template_name = 'roomlist.html'
+
+    def post(self, request, *args, **kwargs):
+        response = HttpResponseRedirect("/")
+        if request.POST['roomname'] != '':
+            data = {
+                'roomname': request.POST['roomname'],
+                'username': request.COOKIES['username'],
+                'time': datetime.now(),
+                'com': 0
+            }
+            Room.objects.create(**data)
+            response.set_cookie('roomname', data['roomname'], expires=datetime.now() + timedelta(days=999))
+        return response
+
+
+def change(request, *args, **kwargs):
+    response = HttpResponseRedirect("/room")
+    response.set_cookie('roomname', kwargs["roomname"], expires=datetime.now() + timedelta(days=999))
+    return response
+
 class chatroom(ListView):
     model = Sentence
-    template_name = 'chatroom.html'
+    template_name = 'room.html'
     context_object_name = 'user_list'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['username'] = self.request.COOKIES['username']
+        context['roomname'] = self.request.COOKIES['roomname']
         return context
 
     def post(self, request, *args, **kwargs):
-        def check_contain_chinese(check_str):
-            for ch in check_str.encode('utf-8').decode('utf-8'):
-                if u'\u4e00' <= ch <= u'\u9fff':
-                    return True
-            return False
+        return say(request)
 
-        if request.POST['sentence'] != '':
-            sentence = request.POST['sentence']
-            analyzer = SentimentIntensityAnalyzer()
-
-            origin_sentence = ""
-            if check_contain_chinese(sentence):
-                api_url = "http://mymemory.translated.net/api/get?q={}&langpair={}|{}".format(sentence, "zh-CN", "en")
-                hdrs = {
-                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                    'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
-                    'Accept-Encoding': 'none',
-                    'Accept-Language': 'en-US,en;q=0.8',
-                    'Connection': 'keep-alive'}
-                response = requests.get(api_url, headers=hdrs)
-                response_json = json.loads(response.text)
-                origin_sentence = sentence
-                sentence = response_json["responseData"]["translatedText"]
-
-            vs = analyzer.polarity_scores(sentence)
-
-            if origin_sentence != "":
-                sentence = origin_sentence
-
-            data = {
-                'username': request.COOKIES['username'],
-                'sentence': sentence,
-                'time': datetime.now(),
-                'color': ('{:02X}' * 3).format(int(255 * vs['pos']), int(255 * vs['neg']), 0),
-                'pos': vs['pos'],
-                'neg': vs['neg'],
-                'neu': vs['neu'],
-                'com': round(vs['compound'], 2)
-            }
-            Sentence.objects.create(**data)
-        return HttpResponseRedirect("/")
 
 
 def test_num(request, *args, **kwargs):
@@ -78,10 +132,24 @@ def test_num(request, *args, **kwargs):
 
 def register(request):
     if request.method == 'GET':
-        print(request.COOKIES)
         if 'username' in request.COOKIES:
-            return HttpResponseRedirect('chatroom')
+            if not User.objects.filter(username=request.COOKIES['username']):
+                data = {'username': request.COOKIES['username']}
+                User.objects.create(**data)
 
+            if 'roomname' in request.COOKIES:
+                if not Room.objects.filter(roomname=request.COOKIES['roomname']):
+                    data = {
+                        'roomname': request.COOKIES['roomname'],
+                        'username': request.COOKIES['username'],
+                        'time': datetime.now(),
+                        'com': 0
+                    }
+                    Room.objects.create(**data)
+
+                return HttpResponseRedirect('room')
+            else:
+                return HttpResponseRedirect('list')
         else:
             return render(request, 'login.html')
 
@@ -89,8 +157,11 @@ def register(request):
         reg_form_obj = UserInfo(data=request.POST)
         if reg_form_obj.is_valid():
             data = reg_form_obj.cleaned_data
+            if User.objects.filter(username=data['username']):
+                return HttpResponseRedirect("/")
+
             User.objects.create(**data)
-            response = HttpResponseRedirect('chatroom')
+            response = HttpResponseRedirect('list')
             response.set_cookie('username', data['username'], expires=datetime.now() + timedelta(days=999))
             return response
         else:

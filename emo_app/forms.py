@@ -9,6 +9,7 @@ from emo_app.models import User
 from django import forms
 
 
-class UserInfo(forms.Form):  # 定义的django表单
+class UserInfo(forms.Form):
     username = forms.CharField(max_length=16)
     #password = forms.CharField(max_length=4)
+

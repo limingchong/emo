@@ -22,3 +22,11 @@ class Sentence(models.Model):
     neg = models.FloatField()
     neu = models.FloatField()
     com = models.FloatField()
+    roomname = models.CharField(max_length=64)
+
+
+class Room(models.Model):
+    roomname = models.CharField(max_length=64)
+    username = models.CharField(max_length=16)
+    time = models.DateTimeField()
+    com = models.FloatField()

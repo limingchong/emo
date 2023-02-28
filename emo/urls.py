@@ -15,13 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.staticfiles.urls import static
+from . import settings
 from emo_app import suburls
-from emo_app.views import chatroom, register
+from emo_app.views import chatroom, register, say, roomlist, change
+from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', register),
-    path('chatroom/', chatroom.as_view(), name='chat_room'),
+    path('room/', chatroom.as_view(), name='chat_room'),
+    path('list/', roomlist.as_view(), name='room_list'),
+    path('change/<str:roomname>',change),
     path('test/', include(suburls,namespace='test')),
+    #path('chatroom/bootstrap.min.js/',"tem")
 ]
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
