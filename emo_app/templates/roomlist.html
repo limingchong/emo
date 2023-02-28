@@ -60,13 +60,13 @@
         <div class="col-lg-12">
             <input type="search" class="form-control" id="input-search" placeholder="Search Attendees...">
         </div>
-        <div class="searchable-container">
+        <div class="searchable-container" style="padding: 10px">
 
             {% for item in object_list %}
                 <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix" onclick="select_room('{{ item.roomname }}')">
                     <div class="info-block block-info clearfix">
-                        <image class="avatar" src="/medias/{{ item.com }}.png" title="{{ item.com }}"
-                               style="width:80px; height:80px; display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
+                        <image class="avatar pull-left" src="/medias/{{ item.com }}.png" title="{{ item.com }}"
+                               style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
                         <!--
                         <div class="square-box pull-left">
                             <span class="glyphicon glyphicon-user glyphicon-lg"></span>
@@ -83,21 +83,24 @@
                 {% csrf_token %}
                 <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix">
                     <div class="info-block block-info clearfix">
-                        <image class="avatar" src="/medias/0.0.png" title="0.0"
-                               style="width:80px; height:80px; display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
+                        <image class="avatar pull-left" src="/medias/0.0.png" title="0.0"
+                               style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
                         <!--
                         <div class="square-box pull-left">
                             <span class="glyphicon glyphicon-user glyphicon-lg"></span>
                         </div>
                         -->
-                        <h5>Create a new room:</h5>
-                        <h4><input name="roomname"/></h4>
+                        <span>
+                            <h5>Create a new room:</h5>
+                            <h4><input name="roomname" placeholder="Room name..."/></h4>
+                            <button>Create</button>
+                        </span>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-<style>
+    <style>
     #formFooter {
         background-color: #f6f6f6;
         border-top: 1px solid #dce8f1;
@@ -117,10 +120,10 @@
         content: "";
         transition: width 0.2s;
     }
-</style>
-<div id="formFooter">
-            <a class="underlineHover" href="mailto:li.mingchong@qq.com">Author: Li Mingchong</a>
-        </div>
+    </style>
+    <div id="formFooter">
+        <a class="underlineHover" href="mailto:li.mingchong@qq.com">Author: Li Mingchong</a>
+    </div>
 </div>
 </body>
 </html>
