@@ -2,59 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>room list</title>
+    <title>help</title>
 </head>
 <body>
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-<style>
-    .glyphicon-lg {
-        font-size: 4em
-    }
-
-    .info-block {
-        border-right: 5px solid #E6E6E6;
-        margin-bottom: 25px
-    }
-
-    .info-block .square-box {
-        width: 100px;
-        min-height: 110px;
-        margin-right: 22px;
-        text-align: center !important;
-        background-color: #676767;
-        padding: 20px 0
-    }
-
-    .info-block.block-info {
-        border-color: #20819e
-    }
-
-    .info-block.block-info .square-box {
-        background-color: #20819e;
-        color: #FFF
-    }
-</style>
-
-<script>
-    $(function () {
-        $('#input-search').on('keyup', function () {
-            var rex = new RegExp($(this).val(), 'i');
-            $('.searchable-container .items').hide();
-            $('.searchable-container .items').filter(function () {
-                return rex.test($(this).text());
-            }).show();
-        });
-    });
-
-    function select_room(x) {
-        location.assign("/change/" + x)
-
-    }
-</script>
-
 
 <style>
     * {
@@ -111,10 +61,6 @@
     }
 
     .top_menu .buttons .button.maximize {
-        background-color: rgba(163, 208, 99, 0.3);
-    }
-
-    .top_menu .buttons .button.maximize:hover {
         background-color: #a3d063;
     }
 
@@ -294,86 +240,17 @@
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="buttons">
-            <div class="button maximize" onclick="location.assign('/help/list')"></div>
+        <div class="buttons" onclick="location.assign('/{{ from }}')">
+            <div class="button close"></div>
         </div>
-        <div class="title">Room List</div>
+        <div class="title">Help</div>
     </div>
     <ul class="messages">
-        <div class="container" style="width: 100%; height: auto;">
-            <div class="row">
-                <div class="col-lg-12">
-                    <input type="search" class="form-control" id="input-search" placeholder="Search Attendees...">
-                </div>
-                <div class="searchable-container" style="padding: 10px">
-
-                    {% for item in object_list %}
-                        <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix"
-                             onclick="select_room('{{ item.roomname }}')">
-                            <div class="info-block block-info clearfix">
-                                <image class="avatar pull-left" src="/medias/{{ item.img }}.png" title="{{ item.com }}"
-                                       style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
-                                <!--
-                                <div class="square-box pull-left">
-                                    <span class="glyphicon glyphicon-user glyphicon-lg"></span>
-                                </div>
-                                -->
-                                <h5>{{ item.username }} created</h5>
-                                <h4>{{ item.roomname }}</h4>
-                                <p>at {{ item.time }}</p>
-                                <span>EMO value: {{ item.com }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix">
-                            <div class="info-block block-info clearfix">
-                                <image class="avatar pull-left" src="/medias/0.0.png" title="0.0"
-                                       style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
-                                <!--
-                                <div class="square-box pull-left">
-                                    <span class="glyphicon glyphicon-user glyphicon-lg"></span>
-                                </div>
-                                -->
-                                <span>
-                            <h5>Create a new room:</h5>
-                            <h4><input name="roomname" placeholder="Room name..."/></h4>
-                            <button>Create</button>
-                        </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <style>
-                #formFooter {
-                    background-color: #f6f6f6;
-                    border-top: 1px solid #dce8f1;
-                    padding: 25px;
-                    text-align: center;
-                    -webkit-border-radius: 0 0 10px 10px;
-                    border-radius: 0 0 10px 10px;
-                }
-
-                .underlineHover:after {
-                    display: block;
-                    left: 0;
-                    bottom: -10px;
-                    width: 0;
-                    height: 2px;
-                    background-color: #56baed;
-                    content: "";
-                    transition: width 0.2s;
-                }
-            </style>
-
-        </div>
+        <image style="width: 100%; height: auto" src="/medias/help1.png"/>
+        <image style="width: 100%; height: auto" src="/medias/help2.png"/>
+        <image style="width: 100%; height: auto" src="/medias/help3.png"/>
     </ul>
 
-    <div class="bottom_wrapper clearfix">
-        <a href="mailto:li.mingchong@qq.com">Author: Li Mingchong</a>
-    </div>
 </div>
 </div>
 

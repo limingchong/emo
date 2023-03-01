@@ -133,6 +133,12 @@ def test_num(request, *args, **kwargs):
     return HttpResponse("hi " + "{:-<65} {}".format(kwargs['num1'], str(vs)))
 
 
+def help(request, *args, **kwargs):
+    return render(request, template_name="help.html", context={
+        'from': kwargs['from']
+    })
+
+
 def register(request):
     if request.method == 'GET':
         if 'username' in request.COOKIES:

@@ -61,6 +61,10 @@
     }
 
     .top_menu .buttons .button.maximize {
+        background-color: rgba(163, 208, 99, 0.3);
+    }
+
+    .top_menu .buttons .button.maximize:hover {
         background-color: #a3d063;
     }
 
@@ -240,7 +244,7 @@
         location.assign("#J_footer");
     }
 
-    function get_detail(name){
+    function get_detail(name) {
         location.assign("/detail/" + name);
     }
 
@@ -252,7 +256,7 @@
 
         same = true;
         xhr.onreadystatechange = success;
-        var url="";
+        var url = "";
         xhr.open("GET", url, false);
         xhr.send();
 
@@ -266,6 +270,7 @@
                 return false;
             }
         }
+
         if (!same) location.assign("/");
     }
 
@@ -328,15 +333,17 @@
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="buttons" onclick="location.assign('/list')">
-            <div class="button close"></div>
+        <div class="buttons">
+            <div class="button close" onclick="location.assign('/list')"></div>
+            <div class="button maximize" onclick="location.assign('/help/room')"></div>
         </div>
         <div class="title">Room: {{ roomname }}({{ last_sentence }})</div>
     </div>
     <ul class="messages">
         {% for item in object_list %}
             {% if roomname == item.roomname %}
-                <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared" onclick="get_detail('{{ item.username }}')">
+                <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared"
+                    onclick="get_detail('{{ item.username }}')">
                     <image class="avatar" src="/medias/{{ item.img }}.png"
                            title="{{ item.username }}({{ item.com }}) at {{ item.time }}"
                            style="display: flex; flex-direction: row; justify-content: center; align-items: center"></image>

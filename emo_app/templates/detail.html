@@ -110,6 +110,14 @@
         position: relative;
     }
 
+    .top_menu .buttons .button.maximize {
+        background-color: rgba(163, 208, 99, 0.3);
+    }
+
+    .top_menu .buttons .button.maximize:hover {
+        background-color: #a3d063;
+    }
+
     .top_menu .buttons .button.close {
         background-color: #f5886e;
     }
@@ -3244,8 +3252,9 @@
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="buttons" onclick="location.assign('/room')">
-            <div class="button close"></div>
+        <div class="buttons">
+            <div class="button close" onclick="location.assign('/room')"></div>
+            <div class="button maximize" onclick="location.assign('/help/detail')"></div>
         </div>
         <div class="title">{{ name }}'s</div>
     </div>
