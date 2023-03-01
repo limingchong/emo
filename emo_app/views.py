@@ -101,7 +101,7 @@ class chatroom(ListView):
         context['username'] = self.request.COOKIES['username']
         context['roomname'] = self.request.COOKIES['roomname']
         if (Sentence.objects.filter(roomname=self.request.COOKIES['roomname'])):
-            context['last_sentence'] = Sentence.objects.filter(roomname=self.request.COOKIES['roomname']).last().id
+            context['last_sentence'] = Sentence.objects.filter(roomname=self.request.COOKIES['roomname']).count()
         else: context['last_sentence'] = 0
 
         return context
