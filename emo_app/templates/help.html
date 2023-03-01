@@ -240,7 +240,13 @@
 <div class="chat_window">
 
     <div class="top_menu">
-        <div class="buttons" onclick="location.assign('/{{ from }}')">
+        <script>
+            function re(str){
+                if (str.substring(0,6)=='detail') location.assign('/detail/'+str.substring(6));
+                else location.assign('/'+str);
+            }
+        </script>
+        <div class="buttons" onclick="re('{{ from }}')">
             <div class="button close"></div>
         </div>
         <div class="title">Help</div>
