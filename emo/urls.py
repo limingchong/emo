@@ -19,7 +19,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.staticfiles.urls import static
 from . import settings
 from emo_app import suburls
-from emo_app.views import chatroom, register, say, roomlist, change
+from emo_app.views import chatroom, register, say, roomlist, change, get_detail
 from django.views.static import serve
 
 urlpatterns = [
@@ -27,12 +27,11 @@ urlpatterns = [
     path('', register),
     path('room/', chatroom.as_view(), name='chat_room'),
     path('list/', roomlist.as_view(), name='room_list'),
-    path('change/<str:roomname>',change),
-    path('test/', include(suburls,namespace='test')),
-    #path('chatroom/bootstrap.min.js/',"tem")
+    path('change/<str:roomname>', change),
+    path('detail/<str:name>', get_detail),
+    path('test/', include(suburls, namespace='test')),
+    # path('chatroom/bootstrap.min.js/',"tem")
 ]
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

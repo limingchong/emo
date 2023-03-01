@@ -9,6 +9,8 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from emo_app.forms import UserInfo
 from emo_app.models import User, Sentence, Room
 import quicktranslate
+from django.template import Context, Template
+
 
 # Create your views here.
 
@@ -62,7 +64,7 @@ def say(request):
             count += 1
 
         avg_com = total_com / count
-        Room.objects.filter(roomname=roomname).update(com=avg_com,img=(round(avg_com/2,1)*10))
+        Room.objects.filter(roomname=roomname).update(com=avg_com, img=(round(avg_com / 2, 1) * 10))
 
     return HttpResponseRedirect("/")
 
@@ -92,6 +94,19 @@ def change(request, *args, **kwargs):
     return response
 
 
+def get_detail(request, *args, **kwargs):
+
+    coms = []
+    for s in Sentence.objects.filter(username=kwargs['name']):
+        coms.append(s.com)
+
+    return render(request, template_name="detail.html", context={
+        'name': kwargs['name'],
+        'average': 0.5,
+        'datas': coms
+    })
+
+
 class chatroom(ListView):
     model = Sentence
     template_name = 'room.html'
@@ -103,7 +118,8 @@ class chatroom(ListView):
         context['roomname'] = self.request.COOKIES['roomname']
         if (Sentence.objects.filter(roomname=self.request.COOKIES['roomname'])):
             context['last_sentence'] = Sentence.objects.filter(roomname=self.request.COOKIES['roomname']).count()
-        else: context['last_sentence'] = 0
+        else:
+            context['last_sentence'] = 0
 
         return context
 

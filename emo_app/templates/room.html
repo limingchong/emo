@@ -240,6 +240,9 @@
         location.assign("#J_footer");
     }
 
+    function get_detail(name){
+        location.assign("/detail/" + name);
+    }
 
     function getter() {
         var xhr;
@@ -327,15 +330,13 @@
     <div class="top_menu">
         <div class="buttons" onclick="location.assign('/list')">
             <div class="button close"></div>
-            <div class="button minimize"></div>
-            <div class="button maximize"></div>
         </div>
         <div class="title">Room: {{ roomname }}({{ last_sentence }})</div>
     </div>
     <ul class="messages">
         {% for item in object_list %}
             {% if roomname == item.roomname %}
-                <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared">
+                <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared" onclick="get_detail('{{ item.username }}')">
                     <image class="avatar" src="/medias/{{ item.img }}.png"
                            title="{{ item.username }}({{ item.com }}) at {{ item.time }}"
                            style="display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
