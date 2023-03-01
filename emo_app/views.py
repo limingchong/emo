@@ -43,11 +43,11 @@ def say(request):
             'username': request.COOKIES['username'],
             'sentence': origin_sentence,
             'time': datetime.now(),
-            'color': ('{:02X}' * 3).format(int(255 * vs['pos']), int(255 * vs['neg']), 0),
+            'img': round(vs['compound'] / 2, 1) * 10,
             'pos': vs['pos'],
             'neg': vs['neg'],
             'neu': vs['neu'],
-            'com': round(vs['compound'] / 2, 1) * 10,
+            'com': vs['compound'],
             'roomname': roomname
         }
         Sentence.objects.create(**data)
@@ -56,13 +56,13 @@ def say(request):
         count = 0
         for s in Sentence.objects.filter(roomname=roomname):
             if check_contain_chinese(s.sentence):
-                total_com += round(
-                    analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound'] / 2, 1) * 10
+                total_com += analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound']
             else:
-                total_com += round(analyzer.polarity_scores(s.sentence)['compound'] / 2, 1) * 10
+                total_com += analyzer.polarity_scores(s.sentence)['compound']
             count += 1
 
-        Room.objects.filter(roomname=roomname).update(com=round(total_com / count, 0))
+        avg_com = total_com / count
+        Room.objects.filter(roomname=roomname).update(com=avg_com,img=(round(avg_com/2,1)*10))
 
     return HttpResponseRedirect("/")
 
@@ -78,7 +78,8 @@ class roomlist(ListView):
                 'roomname': request.POST['roomname'],
                 'username': request.COOKIES['username'],
                 'time': datetime.now(),
-                'com': 0
+                'com': 0,
+                'img': "0.0"
             }
             Room.objects.create(**data)
             response.set_cookie('roomname', data['roomname'], expires=datetime.now() + timedelta(days=999))
@@ -129,7 +130,8 @@ def register(request):
                         'roomname': request.COOKIES['roomname'],
                         'username': request.COOKIES['username'],
                         'time': datetime.now(),
-                        'com': 0
+                        'com': 0,
+                        'img': "0.0"
                     }
                     Room.objects.create(**data)
 

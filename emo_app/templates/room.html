@@ -336,7 +336,7 @@
         {% for item in object_list %}
             {% if roomname == item.roomname %}
                 <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared">
-                    <image class="avatar" src="/medias/{{ item.com }}.png"
+                    <image class="avatar" src="/medias/{{ item.img }}.png"
                            title="{{ item.username }}({{ item.com }}) at {{ item.time }}"
                            style="display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
                     <div class="text_wrapper">
