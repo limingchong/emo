@@ -238,10 +238,36 @@
 <script>
     window.onload = () => {
         location.assign("#J_footer");
-        console.log(document.cookie)
+    }
+
+
+    function getter() {
+        var xhr;
+
+        if (window.XMLHttpRequest) xhr = new window.XMLHttpRequest;
+        else xhr = new ActiveXObject("Microsoft.XMLHTTP");
+
+        same = true;
+        xhr.onreadystatechange = success;
+        var url="";
+        xhr.open("GET", url, false);
+        xhr.send();
+
+        function success() {
+            if (xhr.readyState == 4 && xhr.status == 200) { //回传成功
+                res = xhr.responseText;
+                str = res.split('<div class="title">')[2].split('</div>')[0].split('(')[1].split(')')[0];
+                same = str == {{ last_sentence }};
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (!same) location.assign("room#J_footer");
     }
 
     let intervalId = setInterval(function () {
+        getter();
     }, 1000)
 
     var Message;
@@ -304,18 +330,19 @@
             <div class="button minimize"></div>
             <div class="button maximize"></div>
         </div>
-        <div class="title">Room: {{ roomname }}</div>
+        <div class="title">Room: {{ roomname }}({{ last_sentence }})</div>
     </div>
     <ul class="messages">
         {% for item in object_list %}
             {% if roomname == item.roomname %}
-            <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared">
-                <image class="avatar" src="/medias/{{ item.com }}.png" title="{{ item.username }}({{ item.com }}) at {{ item.time }}"
-                       style="display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
-                <div class="text_wrapper">
-                    <div class="text"><b>{{ item.username }}: </b>{{ item.sentence }} </div>
-                </div>
-            </li>
+                <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared">
+                    <image class="avatar" src="/medias/{{ item.com }}.png"
+                           title="{{ item.username }}({{ item.com }}) at {{ item.time }}"
+                           style="display: flex; flex-direction: row; justify-content: center; align-items: center"></image>
+                    <div class="text_wrapper">
+                        <div class="text"><b>{{ item.username }}: </b>{{ item.sentence }} </div>
+                    </div>
+                </li>
             {% endif %}
         {% endfor %}
         <p id="J_footer"/>

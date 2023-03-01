@@ -2,12 +2,9 @@ import json
 from datetime import datetime, timedelta
 from time import sleep
 
-import requests
-from apscheduler.schedulers.background import BackgroundScheduler
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import ListView
-from django_apscheduler.jobstores import DjangoJobStore, register_events, register_job
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from emo_app.forms import UserInfo
 from emo_app.models import User, Sentence, Room
@@ -16,26 +13,9 @@ import quicktranslate
 # Create your views here.
 
 
-
-last_sentence = 0
-try:
-    scheduler = BackgroundScheduler()
-    scheduler.add_jobstore(DjangoJobStore(), "default")
-    x = last_sentence
-
-    @register_job(scheduler, "interval", seconds=1, id="updater")
-    def update():
-        if x != Sentence.objects.last().id:
-            last_sentence = Sentence.objects.last().id
-            return HttpResponseRedirect("/")
-
-    register_events(scheduler)
-    scheduler.start()
-except Exception as e:
-    print('scheduler error：%s' % str(e))
-
 def say(request):
     sleep(0.3)
+
     def check_contain_chinese(check_str):
         for ch in check_str.encode('utf-8').decode('utf-8'):
             if u'\u4e00' <= ch <= u'\u9fff':
@@ -67,7 +47,7 @@ def say(request):
             'pos': vs['pos'],
             'neg': vs['neg'],
             'neu': vs['neu'],
-            'com': round(vs['compound']/2, 1)*10,
+            'com': round(vs['compound'] / 2, 1) * 10,
             'roomname': roomname
         }
         Sentence.objects.create(**data)
@@ -76,14 +56,16 @@ def say(request):
         count = 0
         for s in Sentence.objects.filter(roomname=roomname):
             if check_contain_chinese(s.sentence):
-                total_com += round(analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound'] / 2, 1) * 10
+                total_com += round(
+                    analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound'] / 2, 1) * 10
             else:
-                total_com += round(analyzer.polarity_scores(s.sentence)['compound']/2, 1)*10
+                total_com += round(analyzer.polarity_scores(s.sentence)['compound'] / 2, 1) * 10
             count += 1
 
-        Room.objects.filter(roomname=roomname).update(com=round(total_com/count, 0))
+        Room.objects.filter(roomname=roomname).update(com=round(total_com / count, 0))
 
     return HttpResponseRedirect("/")
+
 
 class roomlist(ListView):
     model = Room
@@ -108,6 +90,7 @@ def change(request, *args, **kwargs):
     response.set_cookie('roomname', kwargs["roomname"], expires=datetime.now() + timedelta(days=999))
     return response
 
+
 class chatroom(ListView):
     model = Sentence
     template_name = 'room.html'
@@ -117,11 +100,11 @@ class chatroom(ListView):
         context = super().get_context_data(**kwargs)
         context['username'] = self.request.COOKIES['username']
         context['roomname'] = self.request.COOKIES['roomname']
+        context['last_sentence'] = Sentence.objects.last().id
         return context
 
     def post(self, request, *args, **kwargs):
         return say(request)
-
 
 
 def test_num(request, *args, **kwargs):
