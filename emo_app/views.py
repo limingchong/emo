@@ -100,7 +100,10 @@ class chatroom(ListView):
         context = super().get_context_data(**kwargs)
         context['username'] = self.request.COOKIES['username']
         context['roomname'] = self.request.COOKIES['roomname']
-        context['last_sentence'] = Sentence.objects.last().id
+        if (Sentence.objects.filter(roomname=self.request.COOKIES['roomname'])):
+            context['last_sentence'] = Sentence.objects.filter(roomname=self.request.COOKIES['roomname']).last().id
+        else: context['last_sentence'] = 0
+
         return context
 
     def post(self, request, *args, **kwargs):
