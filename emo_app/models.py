@@ -22,7 +22,7 @@ class Sentence(models.Model):
     neg = models.FloatField()
     neu = models.FloatField()
     com = models.FloatField()
-    roomname = models.CharField(max_length=64)
+    roomid = models.IntegerField()
 
 
 class Room(models.Model):

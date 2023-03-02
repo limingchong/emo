@@ -28,7 +28,7 @@ urlpatterns = [
     path('help/<str:from>', help),
     path('room/', chatroom.as_view(), name='chat_room'),
     path('list/', roomlist.as_view(), name='room_list'),
-    path('change/<str:roomname>', change),
+    path('change/<int:roomid>', change),
     path('detail/<str:name>', get_detail),
     path('test/', include(suburls, namespace='test'))
     # path('chatroom/bootstrap.min.js/',"tem")

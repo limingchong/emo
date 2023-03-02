@@ -309,7 +309,7 @@
 
                     {% for item in object_list %}
                         <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix"
-                             onclick="select_room('{{ item.roomname }}')">
+                             onclick="select_room('{{ item.id }}')">
                             <div class="info-block block-info clearfix">
                                 <image class="avatar pull-left" src="/medias/{{ item.img }}.png" title="{{ item.com }}"
                                        style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
@@ -318,10 +318,10 @@
                                     <span class="glyphicon glyphicon-user glyphicon-lg"></span>
                                 </div>
                                 -->
-                                <h5>{{ item.username }} created</h5>
+                                <h5>Key words:</h5>
                                 <h4>{{ item.roomname }}</h4>
-                                <p>at {{ item.time }}</p>
-                                <span>EMO value: {{ item.com }}</span>
+                                <p>created by {{ item.username }}</p>
+                                <span>EMO value: {{ item.com }} / 1</span>
                             </div>
                         </div>
                     {% endfor %}
@@ -329,17 +329,7 @@
                         {% csrf_token %}
                         <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix">
                             <div class="info-block block-info clearfix">
-                                <image class="avatar pull-left" src="/medias/0.0.png" title="0.0"
-                                       style="width:120px; height:120px; display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px;"></image>
-                                <!--
-                                <div class="square-box pull-left">
-                                    <span class="glyphicon glyphicon-user glyphicon-lg"></span>
-                                </div>
-                                -->
-                                <span>
-                            <h5>Create a new room:</h5>
-                            <h4><input name="roomname" placeholder="Room name..."/></h4>
-                            <button>Create</button>
+                            <button style="font-size: 24px;border: #2d6987; color: #407f9b">Create a new room</button>
                         </span>
                             </div>
                         </div>

@@ -9,6 +9,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from emo_app.forms import UserInfo
 from emo_app.models import User, Sentence, Room
 import quicktranslate
+import emo_app.extracter
 from django.template import Context, Template
 
 
@@ -39,7 +40,7 @@ def say(request):
 
         vs = analyzer.polarity_scores(translation)
 
-        roomname = request.COOKIES['roomname']
+        roomid = request.COOKIES['roomid']
 
         data = {
             'username': request.COOKIES['username'],
@@ -50,21 +51,27 @@ def say(request):
             'neg': vs['neg'],
             'neu': vs['neu'],
             'com': vs['compound'],
-            'roomname': roomname
+            'roomid': roomid
         }
         Sentence.objects.create(**data)
 
         total_com = 0
         count = 0
-        for s in Sentence.objects.filter(roomname=roomname):
+        text = ""
+        for s in Sentence.objects.filter(roomid=roomid):
             if check_contain_chinese(s.sentence):
                 total_com += analyzer.polarity_scores(quicktranslate.get_translate_youdao(s.sentence))['compound']
+                text += quicktranslate.get_translate_youdao(s.sentence) + "\n"
             else:
                 total_com += analyzer.polarity_scores(s.sentence)['compound']
+                text += s.sentence + "\n"
             count += 1
 
         avg_com = total_com / count
-        Room.objects.filter(roomname=roomname).update(com=avg_com, img=(round(avg_com / 2, 1) * 10))
+
+
+        Room.objects.filter(id=roomid).update(com=round(avg_com,4), img=(round(avg_com / 2, 1) * 10), roomname=emo_app.extracter.get_key_word(text)[0])
+
 
     return HttpResponseRedirect("/")
 
@@ -75,22 +82,23 @@ class roomlist(ListView):
 
     def post(self, request, *args, **kwargs):
         response = HttpResponseRedirect("/")
-        if request.POST['roomname'] != '':
-            data = {
-                'roomname': request.POST['roomname'],
-                'username': request.COOKIES['username'],
-                'time': datetime.now(),
-                'com': 0,
-                'img': "0.0"
-            }
-            Room.objects.create(**data)
-            response.set_cookie('roomname', data['roomname'], expires=datetime.now() + timedelta(days=999))
+        data = {
+            'roomname': request.COOKIES["username"]+"'s room",
+            'username': request.COOKIES['username'],
+            'time': datetime.now(),
+            'com': 0,
+            'img': "0.0"
+        }
+        Room.objects.create(**data)
+        response.set_cookie('roomid', Room.objects.last().id, expires=datetime.now() + timedelta(days=999))
         return response
 
 
 def change(request, *args, **kwargs):
     response = HttpResponseRedirect("/room")
-    response.set_cookie('roomname', kwargs["roomname"], expires=datetime.now() + timedelta(days=999))
+    print(kwargs["roomid"])
+    response.set_cookie('roomname', "roomname", expires=datetime.now() + timedelta(days=999))
+    response.set_cookie('roomid', kwargs["roomid"], expires=datetime.now() + timedelta(days=999))
     return response
 
 
@@ -114,10 +122,12 @@ class chatroom(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        print(self.request.COOKIES)
         context['username'] = self.request.COOKIES['username']
-        context['roomname'] = self.request.COOKIES['roomname']
-        if (Sentence.objects.filter(roomname=self.request.COOKIES['roomname'])):
-            context['last_sentence'] = Sentence.objects.filter(roomname=self.request.COOKIES['roomname']).count()
+        context['roomname'] = Room.objects.get(id=self.request.COOKIES['roomid']).roomname
+        context['roomid'] = int(self.request.COOKIES['roomid'])
+        if (Sentence.objects.filter(roomid=self.request.COOKIES['roomid'])):
+            context['last_sentence'] = Sentence.objects.filter(roomid=self.request.COOKIES['roomid']).count()
         else:
             context['last_sentence'] = 0
 
@@ -146,10 +156,10 @@ def register(request):
                 data = {'username': request.COOKIES['username']}
                 User.objects.create(**data)
 
-            if 'roomname' in request.COOKIES:
-                if not Room.objects.filter(roomname=request.COOKIES['roomname']):
+            if 'roomid' in request.COOKIES:
+                if not Room.objects.filter(id=request.COOKIES['roomid']):
                     data = {
-                        'roomname': request.COOKIES['roomname'],
+                        'roomname': request.COOKIES["username"]+"'s room",
                         'username': request.COOKIES['username'],
                         'time': datetime.now(),
                         'com': 0,

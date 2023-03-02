@@ -341,7 +341,7 @@
     </div>
     <ul class="messages">
         {% for item in object_list %}
-            {% if roomname == item.roomname %}
+            {% if roomid == item.roomid %}
                 <li class="message {% if username == item.username %}right{% else %}left{% endif %} appeared"
                     onclick="get_detail('{{ item.username }}')">
                     <image class="avatar" src="/medias/{{ item.img }}.png"
