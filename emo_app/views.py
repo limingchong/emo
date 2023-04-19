@@ -69,9 +69,8 @@ def say(request):
 
         avg_com = total_com / count
 
-
-        Room.objects.filter(id=roomid).update(com=round(avg_com,4), img=(round(avg_com / 2, 1) * 10), roomname=emo_app.extracter.get_key_word(text)[0])
-
+        Room.objects.filter(id=roomid).update(com=round(avg_com, 4), img=(round(avg_com / 2, 1) * 10),
+                                              roomname=emo_app.extracter.get_key_word(text)[0])
 
     return HttpResponseRedirect("/")
 
@@ -83,7 +82,7 @@ class roomlist(ListView):
     def post(self, request, *args, **kwargs):
         response = HttpResponseRedirect("/")
         data = {
-            'roomname': request.COOKIES["username"]+"'s room",
+            'roomname': request.COOKIES["username"] + "'s room",
             'username': request.COOKIES['username'],
             'time': datetime.now(),
             'com': 0,
@@ -103,7 +102,6 @@ def change(request, *args, **kwargs):
 
 
 def get_detail(request, *args, **kwargs):
-
     coms = []
     for s in Sentence.objects.filter(username=kwargs['name']):
         coms.append(s.com)
@@ -149,6 +147,10 @@ def help(request, *args, **kwargs):
     })
 
 
+def index(request, *args, **kwargs):
+    return render(request, template_name="index.html")
+
+
 def register(request):
     if request.method == 'GET':
         if 'username' in request.COOKIES:
@@ -159,7 +161,7 @@ def register(request):
             if 'roomid' in request.COOKIES:
                 if not Room.objects.filter(id=request.COOKIES['roomid']):
                     data = {
-                        'roomname': request.COOKIES["username"]+"'s room",
+                        'roomname': request.COOKIES["username"] + "'s room",
                         'username': request.COOKIES['username'],
                         'time': datetime.now(),
                         'com': 0,

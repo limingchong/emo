@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Li Mingchong</title>
+</head>
+
+
+<body>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+    body {
+        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+    }
+
+    .emp-profile {
+        padding: 3%;
+        margin-top: 3%;
+        margin-bottom: 3%;
+        border-radius: 0.5rem;
+        background: #fff;
+    }
+
+    .profile-img {
+        text-align: center;
+    }
+
+    .profile-img img {
+        width: 70%;
+        height: 100%;
+    }
+
+    .profile-img .file {
+        position: relative;
+        overflow: hidden;
+        margin-top: -20%;
+        width: 70%;
+        border: none;
+        border-radius: 0;
+        font-size: 15px;
+        background: #212529b8;
+    }
+
+    .profile-img .file input {
+        position: absolute;
+        opacity: 0;
+        right: 0;
+        top: 0;
+    }
+
+    .profile-head h5 {
+        color: #333;
+    }
+
+    .profile-head h6 {
+        color: #0062cc;
+    }
+
+    .profile-edit-btn {
+        border: none;
+        border-radius: 1.5rem;
+        width: 70%;
+        padding: 2%;
+        font-weight: 600;
+        color: #6c757d;
+        cursor: pointer;
+    }
+
+    .proile-rating {
+        font-size: 12px;
+        color: #818182;
+        margin-top: 5%;
+    }
+
+    .proile-rating span {
+        color: #495057;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .profile-head .nav-tabs {
+        margin-bottom: 5%;
+    }
+
+    .profile-head .nav-tabs .nav-link {
+        font-weight: 600;
+        border: none;
+    }
+
+    .profile-head .nav-tabs .nav-link.active {
+        border: none;
+        border-bottom: 2px solid #0062cc;
+    }
+
+    .profile-work {
+        padding: 14%;
+        margin-top: -15%;
+    }
+
+    .profile-work p {
+        font-size: 12px;
+        color: #818182;
+        font-weight: 600;
+        margin-top: 10%;
+    }
+
+    .profile-work a {
+        text-decoration: none;
+        color: #495057;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .profile-work ul {
+        list-style: none;
+    }
+
+    .profile-tab label {
+        font-weight: 600;
+    }
+
+    .profile-tab p {
+        font-weight: 600;
+        color: #0062cc;
+    }
+</style>
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+<div class="container emp-profile">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img src="/medias/me.jpeg" style="-moz-border-radius:10px;-webkit-border-radius:10px;"
+                         alt=""/>
+                    <!---
+                    <div class="file btn btn-lg btn-primary">
+                        Change Photo
+                        <input type="file" name="file"/>
+                    </div>
+                    --->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5>
+                        Li Mingchong (李明翀)
+                    </h5>
+                    <h6>James Li</h6>
+                    <p class="proile-rating">INTRO: <span>I am currently a student studying in computer science and software development. To chase my dream of designing Chinese ancient style games, I am dedicated to learning and practicing relevant skills. In this website, you can click some links to get more detailed information about me.</span>
+                    </p>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                               aria-controls="home" aria-selected="true">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                               aria-controls="profile" aria-selected="false">Education</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="project-tab" data-toggle="tab" href="#project" role="tab"
+                               aria-controls="project" aria-selected="false">Projects</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!---
+            <div class="col-md-2">
+                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+            </div>
+            --->
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <p>SKILLS</p>
+                    <a>C, C++, Java, C#, Python, JavaScript, sql, Matlab;</a><br/>
+                    <a>MFC, Unity, Django, Tkinter, Kivy;</a><br/>
+                    <a>Dev: Game, Software, Web;</a><br/>
+                    <a>Data Analysis, Reinforce Learning;</a>
+                    <a>English: IELTS(6.5), PTE(65)</a><br/>
+                    <a>Office: Word, Excel, PowerPoint</a><br/>
+                    <p>CONTACTS</p>
+                    <a href="mailto:mingchongli@163.com">mingchongli@163.com</a><br/>
+                    <a href="mailto:limingchong124@gmail.com">limingchong124@gmail.com</a><br/>
+                    <a href="https://www.instagram.com/lmc_james/">Instagram: lmc_james</a><br/>
+                    <a href="https://github.com/limingchong">Github: limingchong</a><br/>
+                    <a>QQ: 1013436135</a><br/>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Gender</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Male/ boy/ MR.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Hometown</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Beijing, China</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Birth</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>2000/10/22</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Sexual Orientation</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Heterosexuality/ Straight</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Hobbies</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Programming💻, cat🐱, football⚽️</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Favourite Teams</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Beijing Guoan️, Barcelona</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Idol</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p onclick='location.assign("https://www.messi.com/")'>Lionel Andrés Messi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>High School(2016-2019)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Beijing Shunyi Niulanshan First Secondary School(北京市顺义牛栏山第一中学)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>BEng.Computer Science(2019-2023)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Beijing Jiaotong University(北京交通大学)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>BEng.Computer Science(2019-2023)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Lancaster University(兰卡斯特大学)</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>MSc.Software Engineering</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>University of Melbourne(墨尔本大学)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="project" role="tabpanel" aria-labelledby="project-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>The Interdisciplinary Contest in Modeling(Meritorious, 2021)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Music Influence Analysis</p>
+                            </div>
+                        </div>
+                        <div class="row" onclick='location.assign("")'>
+                            <div class="col-md-6">
+                                <label>Software Based on MFC(2021)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Online Question Answering System</p>
+                            </div>
+                        </div>
+                        <div class="row" onclick='location.assign("https://gitee.com/SpongeBob1008/muzero_dc")'>
+                            <div class="col-md-6">
+                                <label>Software Based on MuZero(2021)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>A Training System for Game Agents(NPC)</p>
+                            </div>
+                        </div>
+                        <div class="row" onclick='location.assign("https://www.bilibili.com/video/BV1WY4y1n7Fm/")'>
+                            <div class="col-md-6">
+                                <label>Unity Multi-player Game(2022)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Furry Fort</p>
+                            </div>
+                        </div>
+                        <div class="row" onclick='location.assign("http://limingchong.com")'>
+                            <div class="col-md-6">
+                                <label>Final Year Project(2023)</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Chat Room Based on Natural Language Sentiment Analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
